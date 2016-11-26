@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1480117313 source:/home/sig/projects/kosaraju/main.cpp
+	<stdlib.h>
+	<stdio.h>
+	<stdint.h>
+	<vector>
+	<iostream>
+	<fstream>
+	<algorithm>
+	<string>
+	<sstream>
+
