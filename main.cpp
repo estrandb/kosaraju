@@ -9,87 +9,45 @@
 #include <string>
 #include <sstream>
 
+#include "include/Graph.h"
+
 static const int WIDTH = 3;
 static const int HEIGHT = 5105043;
 
 using namespace std;
 
-void printvertices(vector<vector<int> >& graph)
-{
-	for (int i = 0 ; i < 200 ; i++)
-	{
-		for (int j = 0 ; j < graph[i].size() ; j++)
-		{
-			cout << graph[i][j] << " ";
-		}
-		cout << '\n';
-	}
-}
-
-void readfile(vector<vector<int> >& graph)
-{
-	string line;
-
-
-	ifstream file("./SCC.txt");
-	while(getline(file,line))
-    {
-        stringstream lineStream(line);
-        vector<int> lineData;
-
-
-        int value;
-        while (lineStream >> value)
-        {
-            lineData.push_back(value);
-        }
-        if (graph.size() > 0)
-        {
-            int linedatatest = lineData[0] - 1;
-            bool graphtest = graph.at(1).empty();
-            if (!graph[lineData[0] - 1].empty())
-            {
-                graph[lineData[0] - 1].push_back(lineData[1]);
-            }
-            else
-            {
-                graph[lineData[0] - 1].push_back(lineData[0]);
-                graph[lineData[0] - 1].push_back(lineData[1]);
-                vector<int> newline;
-                graph.push_back(newline);
-            }
-        }
-        else
-        {
-            graph.push_back(lineData);
-            vector<int> newline;
-            graph.push_back(newline);
-        }
-    }
-
-	//while (getline(file,vector))
-	//{
-
-	//}
-	return;
-}
-
-int dfsloop(vector<vector<int> >& graph)
-{
-	static int t = 0;
-	static int s = NULL;
-
-
-	return 1;
-}
+std::vector<int> highest;
 
 int main()
 {
-	vector<vector<int> > graph;
+	//Graph g(875714);
+	Graph g(12);
 
-	readfile(graph);
-	dfsloop(graph);
-	printvertices(graph);
+    string vector;
+    //6,3,2,1,0
+    ifstream file("./test.txt");
+	while (getline(file,vector))
+	{
+        std::vector<int> lineData;
+		stringstream lineStream(vector);
+		int value;
+		while (lineStream >> value)
+		{
+			lineData.push_back(value);
+		}
 
-	return 1;
+        g.addEdge(lineData[0],lineData[1]);
+	}
+
+
+    cout << "Following are strongly connected components in "
+            "given graph \n";
+    g.printSCCs();
+
+    for (int i=0; i<highest.size() ; i++)
+    {
+        cout << "highest[" << i << "]: " << highest[i] << endl;
+    }
+
+    return 0;
 }
