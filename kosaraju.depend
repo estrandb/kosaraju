@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1480213366 source:/home/sig/projects/kosaraju/main.cpp
+1480301866 source:/home/sig/projects/kosaraju/main.cpp
 	<stdlib.h>
 	<stdio.h>
 	<stdint.h>
@@ -9,14 +9,13 @@
 	<algorithm>
 	<string>
 	<sstream>
-	"include/Graph.h"
 
-1480210820 /home/sig/projects/kosaraju/include/Graph.h
+1480296553 /home/sig/projects/kosaraju/include/Graph.h
 	<iostream>
 	<list>
 	<stack>
 	<vector>
 
-1480210737 source:/home/sig/projects/kosaraju/src/Graph.cpp
+1480296561 source:/home/sig/projects/kosaraju/src/Graph.cpp
 	"../include/Graph.h"
 

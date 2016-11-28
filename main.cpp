@@ -9,20 +9,51 @@
 #include <string>
 #include <sstream>
 
-#include "include/Graph.h"
-
-static const int WIDTH = 3;
-static const int HEIGHT = 5105043;
-
 using namespace std;
 
-std::vector<int> highest;
+const int NUM_VERTICES = 12;
+int t = 0;
+int s = 0;
+
+void printVerts(const vector<vector<int> >& graph)
+{
+    for (int i = 0; i < NUM_VERTICES; i++)
+    {
+        for (int j = 0; j < graph.at(i).size(); j++)
+        {
+            cout << graph.at(i).at(j) << " ";
+        }
+        cout << endl;
+    }
+    return;
+}
+
+void setVisitedFalse(vector<bool>& visited)
+{
+    for(int i = 0; i < NUM_VERTICES; i++)
+    {
+        visited[i] = false;
+    }
+    return;
+}
+
+void dfsReverse(vector<vector<int> >& graph)
+{
+
+}
 
 int main()
 {
-	//Graph g(875714);
-	Graph g(12);
+    vector<vector<int> > graph;
+    vector<bool> visited;
+    for (int i = 0; i < NUM_VERTICES; i++)
+    {
+        vector<int> vec;
+        graph.push_back(vec);
 
+        visited.push_back(false);
+    }
+    setVisitedFalse(visited);
     string vector;
     //6,3,2,1,0
     ifstream file("./test.txt");
@@ -35,19 +66,12 @@ int main()
 		{
 			lineData.push_back(value);
 		}
-
-        g.addEdge(lineData[0],lineData[1]);
+		//add to array here
+        graph.at(lineData[0] - 1).push_back(lineData[1] - 1);
 	}
+	printVerts(graph);
 
 
-    cout << "Following are strongly connected components in "
-            "given graph \n";
-    g.printSCCs();
-
-    for (int i=0; i<highest.size() ; i++)
-    {
-        cout << "highest[" << i << "]: " << highest[i] << endl;
-    }
 
     return 0;
 }

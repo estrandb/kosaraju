@@ -15,7 +15,6 @@ class Graph
 
     public:
         Graph(int V);
-        int cnt = 0;
 
         void addEdge(int v, int w);
         void printSCCs();

@@ -1,5 +1,6 @@
 #include "../include/Graph.h"
 extern std::vector<int> highest;
+extern int cnt;
 
 Graph::Graph(int V)
 {
@@ -58,7 +59,7 @@ void Graph::fillOrder(int v, bool visited[], std::stack<int> &Stack)
 void Graph::printSCCs()
 {
     std::stack<int> Stack;
-
+    cnt = 0;
     // Mark all the vertices as not visited (For first DFS)
     bool *visited = new bool[V];
     for(int i = 0; i < V; i++)
@@ -87,10 +88,11 @@ void Graph::printSCCs()
         if (visited[v] == false)
         {
             gr.DFSUtil(v, visited);
-            if (cnt >= 2)
-            {
+            //if (cnt >= 2)
+            //{
                 highest.push_back(cnt);
-            }
+                std::cout << cnt << std::endl;
+            //}
             cnt = 0;
             //std::cout << std::endl;
         }
