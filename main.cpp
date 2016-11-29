@@ -11,13 +11,14 @@
 
 using namespace std;
 
-const int NUM_VERTICES = 12;
-int t = 0;
-int s = 0;
+const int NUM_VERTICES = 9;
+
+int finishTimes[NUM_VERTICES];
+int leader[NUM_VERTICES];
 
 void printVerts(const vector<vector<int> >& graph)
 {
-    for (int i = 0; i < NUM_VERTICES; i++)
+    for (int i = 0; i < graph.size(); i++)
     {
         for (int j = 0; j < graph.at(i).size(); j++)
         {
@@ -25,6 +26,8 @@ void printVerts(const vector<vector<int> >& graph)
         }
         cout << endl;
     }
+    cout << endl;
+    cout << endl;
     return;
 }
 
@@ -37,19 +40,32 @@ void setVisitedFalse(vector<bool>& visited)
     return;
 }
 
-void dfsReverse(vector<vector<int> >& graph, vector<bool>& visited, int v)
+void dfs(vector<vector<int> >& graph, int i, vector<bool>& visited, int& t, int& s)
 {
-    /*
-        1. start at last vertex
-        2. explore outgoing arcs
-
-
-
-    */
-    for (int i = NUM_VERTICES; i < 0; i--)
+    visited[i] = true;
+    leader[i] = s;
+    for (int j = 0; j < graph[i].size(); j++)
     {
-        visited[i] = true;
-        for (int j = 0; )
+        if (!visited[graph[i][j]])
+        {
+            dfs(graph, graph[i][j], visited, t, s);
+        }
+    }
+    t++;
+    finishTimes[i] = t;
+}
+
+void dfsLoop(vector<vector<int> >& graph, vector<bool>& visited)
+{
+    int t = -1;
+    int s = 0;
+    for (int i = NUM_VERTICES - 1; i >= 0; i--)
+    {
+        if (!visited[i])
+        {
+            s = i;
+            dfs(graph, i, visited, t, s);
+        }
     }
 }
 
@@ -57,13 +73,15 @@ int main()
 {
     vector<vector<int> > graph;
     vector<vector<int> > revGraph;
+    vector<vector<int> > transposeGraph;
     vector<bool> visited;
     for (int i = 0; i < NUM_VERTICES; i++)
     {
         vector<int> vec;
-        vector<int> vecRev;
+
         graph.push_back(vec);
-        revGraph.push_back(vecRev);
+        revGraph.push_back(vec);
+        transposeGraph.push_back(vec);
 
         visited.push_back(false);
     }
@@ -84,8 +102,25 @@ int main()
         graph.at(lineData[0] - 1).push_back(lineData[1] - 1);
         revGraph.at(lineData[1] - 1).push_back(lineData[0] - 1);
 	}
-	printVerts(graph);
+
+    printVerts(graph);
 	printVerts(revGraph);
+    printVerts(transposeGraph);
+
+    dfsLoop(revGraph, visited);
+
+    int z = finishTimes[0];
+
+    for (int i = 0; i < graph.size(); i++)
+    {
+        for (int j = 0; j < graph[i].size(); j++)
+        {
+            transposeGraph[finishTimes[i]].push_back(finishTimes[graph[i][j]]);
+        }
+    }
+    printVerts(graph);
+	printVerts(revGraph);
+    printVerts(transposeGraph);
 
 
 
