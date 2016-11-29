@@ -9,18 +9,23 @@
 #include <string>
 #include <sstream>
 
+#define VERBOSE 0
+
 using namespace std;
 
-const int NUM_VERTICES = 9;
+const uint32_t NUM_VERTICES = 8;
 
-int finishTimes[NUM_VERTICES];
-int leader[NUM_VERTICES];
+uint32_t finishTimes[NUM_VERTICES];
+uint32_t leader[NUM_VERTICES];
 
-void printVerts(const vector<vector<int> >& graph)
+uint32_t cnt;
+uint32_t highest[5];
+
+void printVerts(const vector<vector<uint32_t> >& graph)
 {
-    for (int i = 0; i < graph.size(); i++)
+    for (uint32_t i = 0; i < graph.size(); i++)
     {
-        for (int j = 0; j < graph.at(i).size(); j++)
+        for (uint32_t j = 0; j < graph.at(i).size(); j++)
         {
             cout << graph.at(i).at(j) << " ";
         }
@@ -33,51 +38,61 @@ void printVerts(const vector<vector<int> >& graph)
 
 void setVisitedFalse(vector<bool>& visited)
 {
-    for(int i = 0; i < NUM_VERTICES; i++)
+    for(uint32_t i = 0; i < NUM_VERTICES; i++)
     {
         visited[i] = false;
     }
     return;
 }
 
-void dfs(vector<vector<int> >& graph, int i, vector<bool>& visited, int& t, int& s)
+void dfs(vector<vector<uint32_t> >& graph, uint32_t i, vector<bool>& visited, int64_t& t, uint32_t& s)
 {
     visited[i] = true;
-    leader[i] = s;
-    for (int j = 0; j < graph[i].size(); j++)
+    for (uint32_t j = 0; j < graph[i].size(); j++)
     {
         if (!visited[graph[i][j]])
         {
             dfs(graph, graph[i][j], visited, t, s);
+            cnt++;
         }
     }
     t++;
     finishTimes[i] = t;
 }
 
-void dfsLoop(vector<vector<int> >& graph, vector<bool>& visited)
+void dfsLoop(vector<vector<uint32_t> >& graph, vector<bool>& visited)
 {
-    int t = -1;
-    int s = 0;
-    for (int i = NUM_VERTICES - 1; i >= 0; i--)
+    int64_t t = -1;
+    uint32_t s = 0;
+    for (int64_t i = NUM_VERTICES - 1; i >= 0; i--)
     {
+        cnt = 0;
         if (!visited[i])
         {
             s = i;
+            cnt = 1;
+            leader[i] = s;
             dfs(graph, i, visited, t, s);
+        }
+        for (uint16_t x = 0; x < 5; x++)
+        {
+            if (highest[x] < cnt && highest[x] != cnt)
+            {
+                highest[x] = cnt;
+            }
         }
     }
 }
 
 int main()
 {
-    vector<vector<int> > graph;
-    vector<vector<int> > revGraph;
-    vector<vector<int> > transposeGraph;
+    vector<vector<uint32_t> > graph;
+    vector<vector<uint32_t> > revGraph;
+    vector<vector<uint32_t> > transposeGraph;
     vector<bool> visited;
-    for (int i = 0; i < NUM_VERTICES; i++)
+    for (uint32_t i = 0; i < NUM_VERTICES; i++)
     {
-        vector<int> vec;
+        vector<uint32_t> vec;
 
         graph.push_back(vec);
         revGraph.push_back(vec);
@@ -91,9 +106,9 @@ int main()
     ifstream file("./test.txt");
 	while (getline(file,vector))
 	{
-        std::vector<int> lineData;
+        std::vector<uint32_t> lineData;
 		stringstream lineStream(vector);
-		int value;
+		uint32_t value;
 		while (lineStream >> value)
 		{
 			lineData.push_back(value);
@@ -103,25 +118,59 @@ int main()
         revGraph.at(lineData[1] - 1).push_back(lineData[0] - 1);
 	}
 
+    #if VERBOSE
+
     printVerts(graph);
 	printVerts(revGraph);
     printVerts(transposeGraph);
 
+    #endif
+
     dfsLoop(revGraph, visited);
 
-    int z = finishTimes[0];
-
-    for (int i = 0; i < graph.size(); i++)
+    for (uint32_t i = 0; i < graph.size(); i++)
     {
-        for (int j = 0; j < graph[i].size(); j++)
+        for (uint32_t j = 0; j < graph[i].size(); j++)
         {
             transposeGraph[finishTimes[i]].push_back(finishTimes[graph[i][j]]);
         }
     }
+
+    setVisitedFalse(visited);
+
+    //reset highest from first dfs
+    for (int x = 0; x < 5; x++)
+        {
+            highest[x] = 0;
+        }
+
+    //reset leaders from first dfs
+    for (uint32_t i = 0; i < NUM_VERTICES; i++)
+    {
+        leader[i] = 0;
+    }
+
+    dfsLoop(transposeGraph, visited);
+
+    for (int i = 0; i < 5; i++)
+    {
+        cout << highest[i] << endl;
+    }
+
+    /*
+    for (uint32_t i = 0; i < NUM_VERTICES; i++)
+    {
+        cout << leader[i] << endl;
+    }
+    */
+
+    #if VERBOSE
+
     printVerts(graph);
 	printVerts(revGraph);
     printVerts(transposeGraph);
 
+    #endif
 
 
     return 0;
