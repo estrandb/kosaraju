@@ -37,19 +37,33 @@ void setVisitedFalse(vector<bool>& visited)
     return;
 }
 
-void dfsReverse(vector<vector<int> >& graph)
+void dfsReverse(vector<vector<int> >& graph, vector<bool>& visited, int v)
 {
+    /*
+        1. start at last vertex
+        2. explore outgoing arcs
 
+
+
+    */
+    for (int i = NUM_VERTICES; i < 0; i--)
+    {
+        visited[i] = true;
+        for (int j = 0; )
+    }
 }
 
 int main()
 {
     vector<vector<int> > graph;
+    vector<vector<int> > revGraph;
     vector<bool> visited;
     for (int i = 0; i < NUM_VERTICES; i++)
     {
         vector<int> vec;
+        vector<int> vecRev;
         graph.push_back(vec);
+        revGraph.push_back(vecRev);
 
         visited.push_back(false);
     }
@@ -68,8 +82,10 @@ int main()
 		}
 		//add to array here
         graph.at(lineData[0] - 1).push_back(lineData[1] - 1);
+        revGraph.at(lineData[1] - 1).push_back(lineData[0] - 1);
 	}
 	printVerts(graph);
+	printVerts(revGraph);
 
 
 
