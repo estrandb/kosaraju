@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <set>
 
 #include <string>
 #include <sstream>
@@ -13,13 +14,15 @@
 
 using namespace std;
 
-const uint32_t NUM_VERTICES = 8;
+const uint32_t NUM_VERTICES = 875714;
 
 uint32_t finishTimes[NUM_VERTICES];
 uint32_t leader[NUM_VERTICES];
 
 uint32_t cnt;
-uint32_t highest[5];
+vector<uint32_t> highest;
+
+bool myfunction (int i,int j) { return (i<j); }
 
 void printVerts(const vector<vector<uint32_t> >& graph)
 {
@@ -74,12 +77,11 @@ void dfsLoop(vector<vector<uint32_t> >& graph, vector<bool>& visited)
             leader[i] = s;
             dfs(graph, i, visited, t, s);
         }
-        for (uint16_t x = 0; x < 5; x++)
+        highest.push_back(cnt);
+        sort(highest.begin(), highest.end(), myfunction);
+        if (highest.size() > 5)
         {
-            if (highest[x] < cnt && highest[x] != cnt)
-            {
-                highest[x] = cnt;
-            }
+            highest.erase(highest.begin());
         }
     }
 }
@@ -103,7 +105,7 @@ int main()
     setVisitedFalse(visited);
     string vector;
     //6,3,2,1,0
-    ifstream file("./test.txt");
+    ifstream file("./SCC.txt");
 	while (getline(file,vector))
 	{
         std::vector<uint32_t> lineData;
@@ -139,10 +141,7 @@ int main()
     setVisitedFalse(visited);
 
     //reset highest from first dfs
-    for (int x = 0; x < 5; x++)
-        {
-            highest[x] = 0;
-        }
+    highest.clear();
 
     //reset leaders from first dfs
     for (uint32_t i = 0; i < NUM_VERTICES; i++)
@@ -152,9 +151,9 @@ int main()
 
     dfsLoop(transposeGraph, visited);
 
-    for (int i = 0; i < 5; i++)
+    for (std::vector<uint32_t>::iterator it = highest.begin(); it != highest.end(); ++it)
     {
-        cout << highest[i] << endl;
+        cout << *it << endl;
     }
 
     /*
